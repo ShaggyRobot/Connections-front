@@ -1,0 +1,76 @@
+<div class="conversation">
+  <div class="message-list" tuiSurface="elevated">
+    <tui-scrollbar #chatContainer>
+      <div class="message-list__messages">
+        <div class="message" *ngFor="let message of messages">
+          <standalone-message [message]="message" />
+        </div>
+      </div>
+    </tui-scrollbar>
+  </div>
+
+  <div class="input-wrapper tui-space_top-1">
+    <tui-input
+      class="input-form tui-space_right-1"
+      tuiTextfieldSize="m"
+      [(ngModel)]="message"
+    >
+      <input
+        tuiTextfield
+        placeholder="Enter your message.."
+        (keydown.enter)="onSend()"
+      />
+    </tui-input>
+
+    <button
+      tuiIconButton
+      icon="tuiIconSendLarge"
+      size="m"
+      class="send-btn"
+      (click)="onSend()"
+    ></button>
+  </div>
+
+  <div class="controls">
+    <a
+      tuiIconButton
+      [routerLink]="['/']"
+      icon="tuiIconArrowLeftLarge"
+      size="m"
+      class="controls__back"
+      [disabled]="(httpLoading | async) ?? false"
+    ></a>
+
+    <button
+      *ngIf="owned"
+      tuiIconButton
+      icon="tuiIconTrash2Large"
+      size="m"
+      class="controls__delete"
+      (click)="onDelete()"
+      [disabled]="(httpLoading | async) ?? false"
+    ></button>
+
+    <button
+      *ngIf="!timer; else progress"
+      tuiIconButton
+      icon="tuiIconRefreshCcwLarge"
+      size="m"
+      class="controls__refresh"
+      (click)="onRefresh()"
+      [disabled]="(httpLoading | async) ?? false"
+    ></button>
+  </div>
+
+  <ng-template #progress>
+    <label class="progress" tuiProgressLabel>
+      <span class="counter-text">{{ timer }}</span>
+      <tui-progress-circle
+        new
+        size="xs"
+        [max]="timerMax"
+        [value]="timer || 0"
+      />
+    </label>
+  </ng-template>
+</div>

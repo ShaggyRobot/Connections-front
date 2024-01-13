@@ -1,0 +1,6 @@
+<tui-theme-night *ngIf="theme" />
+
+<tui-root>
+  <app-header (theme)="handleTheme($event)"></app-header>
+  <router-outlet></router-outlet>
+</tui-root>

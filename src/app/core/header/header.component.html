@@ -1,0 +1,38 @@
+<header class="header" tuiSurface="elevated">
+  <div [formGroup]="form">
+    <tui-toggle size="l" formControlName="night" class="toggler" />
+  </div>
+
+  <nav class="header__nav">
+    <div class="header__nav-menu">
+      <img
+        *ngIf="auth.isLoggedIn$ | async"
+        class="logo"
+        src="assets/images/connections.svg"
+        alt="logo"
+        [routerLink]="(auth.isLoggedIn$ | async) ? ['/'] : null"
+        [@fadeIn]="logged ? 'logged' : null"
+      />
+    </div>
+
+    <div
+      class="header__nav-auth"
+      *ngIf="!(auth.isLoggedIn$ | async); else profile"
+    >
+      <button tuiButton size="s" [routerLink]="['auth/signin']">Sign In</button>
+
+      <button
+        tuiButton
+        size="s"
+        appearance="flat"
+        [routerLink]="['auth/signup']"
+      >
+        Sign Up
+      </button>
+    </div>
+  </nav>
+</header>
+
+<ng-template #profile>
+  <button tuiButton size="s" [routerLink]="['profile']">Profile</button>
+</ng-template>

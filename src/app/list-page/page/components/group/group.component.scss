@@ -1,0 +1,25 @@
+.group {
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:hover {
+    background-color: var(--tui-base-04);
+  }
+
+  .name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.delete-btn {
+  z-index: 100;
+  cursor: pointer;
+
+  transition: 0.25s cubic-bezier(0.56, 0.54, 0.24, 1.54);
+  &:hover {
+    transform: scale(1.25);
+  }
+}

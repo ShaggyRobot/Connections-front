@@ -1,0 +1,68 @@
+<div class="wrapper">
+  <div class="controls">
+    <button
+      tuiButton
+      size="s"
+      class="tui-space_bottom-5"
+      (click)="openDialog()"
+    >
+      New Group
+    </button>
+    <button
+      *ngIf="!timerService.timers['groups']; else progress"
+      tuiButton
+      size="s"
+      (click)="onRefresh()"
+      [disabled]="(loading$ | async) ?? false"
+      class="tui-space_bottom-5"
+    >
+      Refresh
+    </button>
+  </div>
+
+  <tui-scrollbar>
+    <div class="groups-list">
+      <div *ngFor="let group of groups">
+        <app-group [group]="group" (uidDeleted)="onDeleteGroup($event)" />
+      </div>
+    </div>
+  </tui-scrollbar>
+
+  <ng-template #progress>
+    <label class="progress tui-space_bottom-3" tuiProgressLabel>
+      <span class="counter-text">{{ timerService.timers["groups"] }}</span>
+      <tui-progress-circle
+        new
+        size="xs"
+        [max]="timerService.max"
+        [value]="timerService.timers['groups'] || 0"
+      />
+    </label>
+  </ng-template>
+</div>
+
+<ng-template
+  let-observer
+  [tuiDialogOptions]="{ label: 'Create New Group', size: 's' }"
+  [(tuiDialog)]="dialogOpen"
+>
+  <form
+    [formGroup]="form"
+    class="new-group-form tui-space_top-6"
+    (ngSubmit)="onSubmit(this.form.get('groupName')?.value)"
+  >
+    <tui-input
+      formControlName="groupName"
+      tuiTextfieldSize="m"
+      tuiHintContent="Only letters, digits and spaces, no longer than 30 chars."
+    >
+      New Group Name
+      <input tuiTextfield />
+    </tui-input>
+    <div class="tui-form__buttons">
+      <button tuiButton type="submit" size="s" [disabled]="!form.valid">
+        Submit
+      </button>
+    </div>
+  </form>
+</ng-template>

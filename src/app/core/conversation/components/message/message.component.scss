@@ -1,0 +1,50 @@
+.message {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem 1rem 1rem 0;
+  padding: 1rem 1rem 0.5rem 1rem;
+  width: fit-content;
+  min-width: 30%;
+  max-width: min(600px, 100%);
+  background-color: var(--tui-success-bg);
+  margin-right: 1.25rem;
+
+  &__text {
+    word-break: break-word;
+
+    a {
+      color: var(--tui-text-01);
+      text-decoration: underline;
+    }
+  }
+
+  &__meta {
+    display: flex;
+    gap: 0.5rem;
+    width: fit-content;
+    padding: 0 0.5rem;
+    border-radius: 0.26rem;
+    background: var(--tui-clear);
+
+    &-username {
+      word-break: break-word;
+    }
+
+    &-time {
+      span {
+        font-size: 0.7em;
+      }
+    }
+  }
+}
+
+.owned {
+  margin-left: auto;
+  background-color: var(--tui-info-bg-hover);
+  margin-right: 1.25rem;
+  .message__meta {
+    margin-left: auto;
+  }
+
+  border-radius: 1rem 1rem 0 1rem;
+}

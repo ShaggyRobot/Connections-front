@@ -1,0 +1,23 @@
+.user {
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:hover {
+    background-color: var(--tui-base-04);
+  }
+
+  .name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.has-conversation {
+  background-color: var(--tui-success-bg);
+
+  &:hover {
+    background-color: var(--tui-success-bg-hover);
+  }
+}

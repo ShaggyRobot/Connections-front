@@ -1,0 +1,88 @@
+<div class="container">
+  <form
+    [formGroup]="signUpForm"
+    class="signup_form"
+    tuiSurface="flat"
+    (ngSubmit)="onSubmit()"
+  >
+    <div tui-col_8>
+      <h3 class="tui-form__header tui-form__header_margin-top_none">Sign Up</h3>
+
+      <div class="tui-form__row">
+        <tui-input
+          formControlName="name"
+          tuiHintContent="Only letters, and white spaces, 40 chars max."
+          tuiTextfieldSize="s"
+        >
+          Name
+          <input placeholder="Enter your name" tuiTextfield />
+        </tui-input>
+        <tui-error
+          formControlName="name"
+          [error]="[] | tuiFieldError | async"
+        ></tui-error>
+      </div>
+
+      <div class="tui-form__row">
+        <tui-input
+          formControlName="email"
+          tuiHintContent="Valid email, please."
+          tuiTextfieldSize="s"
+        >
+          Email
+          <input placeholder="Enter your email" tuiTextfield />
+        </tui-input>
+        <tui-error
+          formControlName="email"
+          [error]="[] | tuiFieldError | async"
+        ></tui-error>
+      </div>
+
+      <div class="tui-form__row">
+        <tui-input
+          formControlName="password"
+          tuiHintContent="At least 8 chars long, must contain uppercase letters, digits and at least one of !, @, #, ?."
+          tuiTextfieldSize="s"
+        >
+          Password
+          <input
+            type="password"
+            placeholder="Enter your Password"
+            tuiTextfield
+          />
+        </tui-input>
+        <tui-error
+          formControlName="password"
+          [error]="[] | tuiFieldError | async"
+        />
+        <tui-error *ngFor="let e of passwordErrors" [error]="e" />
+      </div>
+    </div>
+
+    <div class="tui-form__buttons">
+      <button
+        size="s"
+        tuiButton
+        type="submit"
+        class="tui-form__button"
+        [disabled]="
+          (submitAttempted && signUpForm.invalid) ||
+          ((httpLoading$ | async) ?? false)
+        "
+      >
+        Submit
+      </button>
+
+      <button
+        appearance="flat"
+        size="s"
+        tuiButton
+        type="button"
+        class="tui-form__button"
+        (click)="signUpForm.reset()"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

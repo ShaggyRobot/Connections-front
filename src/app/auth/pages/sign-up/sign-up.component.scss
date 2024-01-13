@@ -1,0 +1,19 @@
+.container {
+  margin-top: 64px;
+}
+
+.signup_form {
+  margin: auto;
+  width: 300px;
+  border-radius: 6px;
+
+  &::after {
+    content: '';
+    background-image: url('^assets/images/connections.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.15;
+    height: 4rem;
+  }
+}

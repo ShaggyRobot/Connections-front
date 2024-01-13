@@ -1,0 +1,21 @@
+<div class="message" [ngClass]="message.owner ? 'owned' : null">
+  <div class="message__meta">
+    <div class="message__meta-username">
+      {{ message.name }}
+    </div>
+
+    <div class="message__meta-time">
+      <span>{{ message.createdAt | date: "dd MMM yyyy 'at' HH:mm:ss" }} </span>
+    </div>
+  </div>
+
+  <div class="message__text" *ngIf="!testForLink(message.message); else link">
+    {{ message.message }}
+  </div>
+</div>
+
+<ng-template #link>
+  <div class="message__text">
+    <a tuiLink icon="tuiIconLink2" target="_blank" href="{{ message.message }}">{{ message.message }}</a>
+  </div>
+</ng-template>

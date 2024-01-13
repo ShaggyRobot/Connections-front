@@ -1,0 +1,40 @@
+* {
+  box-sizing: border-box;
+}
+
+app-root {
+  height: 100%;
+}
+
+tui-root {
+  height: 100%;
+}
+
+tui-dropdown-host {
+  .t-root-content {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+[tuiWrapper][data-noborder="true"]::after {
+  border: 2px solid red
+}
+
+[tuiWrapper][data-appearance="green"] {
+  background-color: #346334;
+  color: white;
+
+  &:hover {
+    background: #6e856e;
+
+  }
+
+  &:active {
+    background-color: darkolivegreen;
+  }
+
+  &:disabled {
+    background-color: darkgrey;
+  }
+}

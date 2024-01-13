@@ -1,0 +1,14 @@
+<div class="not-found">
+  <div class="not-found__img-wrapper">
+    <img
+      alt="not found"
+      src="assets/images/404_astronaut.svg"
+      tuiSlot="center"
+      class="image"
+    />
+  </div>
+
+  <a [routerLink]="[(auth.isLoggedIn$ | async) ? '/' : '/auth/signin']">
+    <button tuiButton size="m">Go to main</button>
+  </a>
+</div>

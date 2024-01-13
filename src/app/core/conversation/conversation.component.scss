@@ -1,0 +1,94 @@
+:host {
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+tui-scrollbar {
+  scroll-behavior: smooth;
+}
+
+.conversation {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  .message-list {
+    display: flex;
+    padding-right: 0;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 0.5rem 0.5rem 0 0;
+    flex-grow: 1;
+    background-color: var(--tui-base-02);
+    border: 1px solid var(--tui-base-03);
+
+    &__messages {
+      padding-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+
+  .input-wrapper {
+    width: 100%;
+    flex-shrink: 0;
+    display: flex;
+
+    .input-form {
+      flex-grow: 1;
+    }
+
+    tui-input {
+      border-radius: 0 0 0 0.5rem;
+      font-size: 20px;
+    }
+
+    .send-btn {
+      border-radius: 0 0 0.5rem 0;
+    }
+  }
+}
+
+.controls {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  right: 1.25rem;
+  top: 0.5rem;
+
+  button,
+  a {
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.3490196078) -1px 4px 7px 1px;
+  }
+
+  &__back ::ng-deep .t-wrapper {
+    background-color: #0f80009a;
+    &:hover {
+      background-color: #0f8000;
+    }
+  }
+
+  &__delete ::ng-deep .t-wrapper {
+    background-color: #aa1f1d9a;
+    &:hover {
+      background-color: #aa1f1d;
+    }
+  }
+
+  &__refresh ::ng-deep .t-wrapper {
+    background-color: #5367af9a;
+    &:hover {
+      background-color: #5367af;
+    }
+  }
+}
+
+.progress {
+  padding: 2px;
+  --tui-thickness: 0.225rem;
+}

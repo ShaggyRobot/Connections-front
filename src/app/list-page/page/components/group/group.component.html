@@ -1,0 +1,49 @@
+<div
+  class="group tui-space_right-4"
+  tuiSurface="flat"
+  [routerLink]="['group', group.id]"
+>
+  <div class="name">
+    {{ group.name }}
+  </div>
+
+  <div
+    class="delete-btn"
+    *ngIf="owned"
+    (click)="$event.stopPropagation(); dialogOpen = true"
+  >
+    <tui-icon [style.color]="'orangered'" icon="tuiIconXSquareLarge">
+    </tui-icon>
+  </div>
+</div>
+
+<ng-template
+  let-observer
+  [tuiDialogOptions]="{ label: 'Are you sure?', size: 's' }"
+  [(tuiDialog)]="dialogOpen"
+>
+  <div class="tui-form__buttons confirm-btns">
+    <button
+      tuiButton
+      type="submit"
+      appearance="accent"
+      size="m"
+      class="tui-space_right-5"
+      (click)="onDelete()"
+      [disabled]="(httpLoading | async) ?? false"
+    >
+      Yep
+    </button>
+
+    <button
+      tuiButton
+      type="submit"
+      appearance="flat"
+      size="m"
+      (click)="dialogOpen = false"
+      [disabled]="(httpLoading | async) ?? false"
+    >
+      Nope
+    </button>
+  </div>
+</ng-template>

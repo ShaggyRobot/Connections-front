@@ -1,0 +1,64 @@
+<div class="container">
+  <form
+    [formGroup]="signInForm"
+    class="signin_form"
+    tuiSurface="flat"
+    (ngSubmit)="onSubmit()"
+  >
+    <div tui-col_8>
+      <h3 class="tui-form__header tui-form__header_margin-top_none">Sign In</h3>
+      <div class="tui-form__row">
+        <tui-input formControlName="email" tuiTextfieldSize="s">
+          Email
+          <input placeholder="Enter your email" tuiTextfield />
+        </tui-input>
+        <tui-error
+          formControlName="email"
+          [error]="[] | tuiFieldError | async"
+        ></tui-error>
+      </div>
+
+      <div class="tui-form__row">
+        <tui-input formControlName="password" tuiTextfieldSize="s">
+          Password
+          <input
+            placeholder="Enter your Password"
+            tuiTextfield
+            type="password"
+          />
+        </tui-input>
+        <tui-error
+          formControlName="password"
+          [error]="[] | tuiFieldError | async"
+        />
+      </div>
+    </div>
+
+    <div class="tui-form__buttons">
+      <button
+        size="s"
+        tuiButton
+        type="submit"
+        class="tui-form__button"
+        [disabled]="
+          (submitAttempted && signInForm.invalid) ||
+          ((loading$ | async) ?? false) ||
+          attemptFailed
+        "
+      >
+        Submit
+      </button>
+
+      <button
+        appearance="flat"
+        size="s"
+        tuiButton
+        type="button"
+        class="tui-form__button"
+        (click)="signInForm.reset()"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,39 @@
+<app-conversation
+  [messages]="messagesWithNames"
+  [timer]="timer.timers[id]"
+  [timerMax]="timer.max"
+  [owned]="true"
+  (outgoingMessage)="onSend($event)"
+  (refresh)="onRefresh()"
+  (delete)="dialogOpen = true"
+/>
+<ng-template
+  let-observer
+  [tuiDialogOptions]="{ label: 'Are you sure?', size: 's' }"
+  [(tuiDialog)]="dialogOpen"
+>
+  <div class="tui-form__buttons confirm-btns">
+    <button
+      tuiButton
+      type="submit"
+      appearance="accent"
+      size="m"
+      class="tui-space_right-5"
+      (click)="onDelete()"
+      [disabled]="(httpLoading | async) ?? false"
+    >
+      Yep
+    </button>
+
+    <button
+      tuiButton
+      type="submit"
+      appearance="flat"
+      size="m"
+      (click)="dialogOpen = false"
+      [disabled]="(httpLoading | async) ?? false"
+    >
+      Nope
+    </button>
+  </div>
+</ng-template>

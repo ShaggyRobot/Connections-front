@@ -1,0 +1,11 @@
+<div
+  class="user tui-space_right-4"
+  tuiSurface="flat"
+  [ngClass]="user.conversation && 'has-conversation'"
+  [routerLink]="user.conversation ? ['conversation', user.conversation.id] : null"
+  (click)="!user.conversation ? createConversation() : null"
+>
+  <div class="name">
+    {{ user.name }}
+  </div>
+</div>

@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  width: min(400px, 95vw);
+  border-radius: var(--tui-radius-s);
+  border: 1px solid var(--tui-base-03);
+
+  &::after {
+    content: '';
+    background-image: url('^assets/images/connections.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    opacity: 0.15;
+  }
+
+  &__row {
+    display: flex;
+    height: 30px;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+}
+
+.name_form {
+  min-width: 50%;
+}
+
+.logout-btn {
+  align-self: end;
+}
