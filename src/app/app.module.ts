@@ -72,7 +72,7 @@ import { PersonalConversationsEffects } from 'src/app/store/effects/personal-con
       GroupConversationsEffects,
       PersonalConversationsEffects,
     ]),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() , connectInZone: true}),
   ],
   providers: [
     { provide: TUI_SANITIZER, useClass: NgDompurifySanitizer },
