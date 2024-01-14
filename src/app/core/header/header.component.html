@@ -5,34 +5,34 @@
 
   <nav class="header__nav">
     <div class="header__nav-menu">
-      <img
-        *ngIf="auth.isLoggedIn$ | async"
-        class="logo"
-        src="assets/images/connections.svg"
-        alt="logo"
-        [routerLink]="(auth.isLoggedIn$ | async) ? ['/'] : null"
-        [@fadeIn]="logged ? 'logged' : null"
-      />
+      @if (auth.isLoggedIn$ | async) {
+        <img
+          class="logo"
+          src="assets/images/connections.svg"
+          alt="logo"
+          [routerLink]="(auth.isLoggedIn$ | async) ? ['/'] : null"
+          [@fadeIn]="logged ? 'logged' : null"
+          />
+      }
     </div>
 
-    <div
-      class="header__nav-auth"
-      *ngIf="!(auth.isLoggedIn$ | async); else profile"
-    >
-      <button tuiButton size="s" [routerLink]="['auth/signin']">Sign In</button>
-
-      <button
-        tuiButton
-        size="s"
-        appearance="flat"
-        [routerLink]="['auth/signup']"
-      >
-        Sign Up
-      </button>
-    </div>
+    @if (!(auth.isLoggedIn$ | async)) {
+      <div
+        class="header__nav-auth"
+        >
+        <button tuiButton size="s" [routerLink]="['auth/signin']">Sign In</button>
+        <button
+          tuiButton
+          size="s"
+          appearance="flat"
+          [routerLink]="['auth/signup']"
+          >
+          Sign Up
+        </button>
+      </div>
+    } @else {
+      <button tuiButton size="s" [routerLink]="['profile']">Profile</button>
+    }
   </nav>
 </header>
 
-<ng-template #profile>
-  <button tuiButton size="s" [routerLink]="['profile']">Profile</button>
-</ng-template>

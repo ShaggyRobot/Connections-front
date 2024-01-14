@@ -1,9 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk/utils';
-import { TuiAlertService } from '@taiga-ui/core';
+import {
+  TuiAlertService,
+  TuiButtonComponent,
+  TuiButtonModule,
+  TuiErrorModule,
+  TuiTextfieldControllerModule,
+} from '@taiga-ui/core';
+import { TuiSurfaceModule } from '@taiga-ui/experimental';
+import { TuiFieldErrorPipeModule, TuiInputModule } from '@taiga-ui/kit';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit/tokens';
 import {
   AuthService,
@@ -12,9 +21,22 @@ import {
 import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector';
 
 @Component({
+  standalone: true,
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.scss'],
+
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TuiErrorModule,
+    TuiInputModule,
+    TuiFieldErrorPipeModule,
+    TuiTextfieldControllerModule,
+    TuiButtonModule,
+    TuiSurfaceModule
+  ],
+
   providers: [
     {
       provide: TUI_VALIDATION_ERRORS,

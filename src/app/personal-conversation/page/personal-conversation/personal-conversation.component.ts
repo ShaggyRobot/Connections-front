@@ -1,10 +1,16 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TuiAlertService } from '@taiga-ui/core';
+import {
+  TuiAlertService,
+  TuiButtonModule,
+  TuiDialogModule,
+} from '@taiga-ui/core';
 import { Observable, Subject, combineLatest, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { TMessageWithName } from 'src/app/core/conversation/components/message/message.component';
+import { ConversationComponent } from 'src/app/core/conversation/conversation.component';
 import { ListPageService } from 'src/app/list-page/services/list-page.service';
 import { TimerService } from 'src/app/list-page/services/timer.service';
 import { PersonalConversationService } from 'src/app/personal-conversation/services/personal-conversation.service';
@@ -17,6 +23,10 @@ import {
 import { TMessage } from 'src/app/store/state.model';
 
 @Component({
+  standalone: true,
+
+  imports: [AsyncPipe, TuiDialogModule, TuiButtonModule, ConversationComponent],
+
   selector: 'app-personal-conversation',
   templateUrl: './personal-conversation.component.html',
   styleUrls: ['./personal-conversation.component.scss'],

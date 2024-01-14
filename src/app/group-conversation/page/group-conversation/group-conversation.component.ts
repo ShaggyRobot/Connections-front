@@ -1,11 +1,13 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TuiAlertService } from '@taiga-ui/core';
+import { TuiAlertService, TuiButtonModule, TuiDialogModule } from '@taiga-ui/core';
 import { Observable, Subject, combineLatest, takeUntil } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { TMessageWithName } from 'src/app/core/conversation/components/message/message.component';
+import { ConversationComponent } from 'src/app/core/conversation/conversation.component';
 import { ListPageService } from 'src/app/list-page/services/list-page.service';
 import { TimerService } from 'src/app/list-page/services/timer.service';
 import { groupConversationsActions } from 'src/app/store/actions/group-conversations-actions';
@@ -17,6 +19,14 @@ import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector'
 import { TMessage } from 'src/app/store/state.model';
 
 @Component({
+  standalone: true,
+  imports: [
+    AsyncPipe,
+
+    ConversationComponent,
+    TuiDialogModule,
+    TuiButtonModule
+  ],
   selector: 'app-group-conversation',
   templateUrl: './group-conversation.component.html',
   styleUrls: ['./group-conversation.component.scss'],

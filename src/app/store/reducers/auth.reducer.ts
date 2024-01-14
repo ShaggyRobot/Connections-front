@@ -6,9 +6,9 @@ export const initAuthState: TAuthState = {
   error: null,
   profile: {
     createdAt: '',
-    email: '',
+    email: localStorage.getItem('login') || '',
     name: '',
-    uid: '',
+    uid: localStorage.getItem('uid') || '',
   },
 };
 

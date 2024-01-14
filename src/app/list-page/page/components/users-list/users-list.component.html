@@ -1,19 +1,32 @@
 <div class="wrapper">
-  <button
-    *ngIf="!timerService.timers['users']; else progress"
-    tuiButton
-    size="s"
-    class="tui-space_bottom-5"
-    (click)="onRefresh()"
-    [disabled]="((loading$ | async) ?? false) || disableRefresh"
-  >
-    Refresh
-  </button>
+  @if (!timerService.timers['users']) {
+    <button
+      tuiButton
+      size="s"
+      class="tui-space_bottom-5"
+      (click)="onRefresh()"
+      [disabled]="((loading$ | async) ?? false) || disableRefresh"
+      >
+      Refresh
+    </button>
+  } @else {
+    <label class="progress tui-space_bottom-3" tuiProgressLabel>
+      <span class="counter-text">{{ timerService.timers["users"] }}</span>
+      <tui-progress-circle
+        new
+        size="xs"
+        [max]="timerService.max"
+        [value]="timerService.timers['users'] || 0"
+        />
+    </label>
+  }
   <tui-scrollbar>
     <div class="users-list">
-      <ng-container *ngFor="let user of usersWithConversations">
-        <app-user [user]="user" *ngIf="user.uid !== (userId | async)" />
-      </ng-container>
+      @for (user of usersWithConversations; track user) {
+        @if (user.uid !== (userId | async)) {
+          <app-user [user]="user" />
+        }
+      }
     </div>
   </tui-scrollbar>
 
@@ -25,7 +38,7 @@
         size="xs"
         [max]="timerService.max"
         [value]="timerService.timers['users'] || 0"
-      />
+        />
     </label>
   </ng-template>
 </div>

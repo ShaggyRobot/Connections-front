@@ -1,12 +1,21 @@
+import { NgClass } from '@angular/common';
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TuiAlertService } from '@taiga-ui/core';
+import { TuiSurfaceModule } from '@taiga-ui/experimental';
 import { Subject, takeUntil } from 'rxjs';
-import { TConversation, TUser } from 'src/app/list-page/models/list-page.model';
+import { TConversation } from 'src/app/list-page/models/list-page.model';
 import { TUserWithConversation } from 'src/app/list-page/page/components/users-list/users-list.component';
 import { PersonalConversationService } from 'src/app/personal-conversation/services/personal-conversation.service';
 
 @Component({
+  standalone: true,
+  imports: [
+    NgClass,
+    RouterModule,
+
+    TuiSurfaceModule
+  ],
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],

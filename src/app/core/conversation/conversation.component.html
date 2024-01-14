@@ -2,9 +2,11 @@
   <div class="message-list" tuiSurface="elevated">
     <tui-scrollbar #chatContainer>
       <div class="message-list__messages">
-        <div class="message" *ngFor="let message of messages">
-          <standalone-message [message]="message" />
-        </div>
+        @for (message of messages; track message) {
+          <div class="message">
+            <standalone-message [message]="message" />
+          </div>
+        }
       </div>
     </tui-scrollbar>
   </div>
@@ -14,12 +16,12 @@
       class="input-form tui-space_right-1"
       tuiTextfieldSize="m"
       [(ngModel)]="message"
-    >
+      >
       <input
         tuiTextfield
         placeholder="Enter your message.."
         (keydown.enter)="onSend()"
-      />
+        />
     </tui-input>
 
     <button
@@ -41,25 +43,37 @@
       [disabled]="(httpLoading | async) ?? false"
     ></a>
 
-    <button
-      *ngIf="owned"
-      tuiIconButton
-      icon="tuiIconTrash2Large"
-      size="m"
-      class="controls__delete"
-      (click)="onDelete()"
-      [disabled]="(httpLoading | async) ?? false"
-    ></button>
+    @if (owned) {
+      <button
+        tuiIconButton
+        icon="tuiIconTrash2Large"
+        size="m"
+        class="controls__delete"
+        (click)="onDelete()"
+        [disabled]="(httpLoading | async) ?? false"
+      ></button>
+    }
 
-    <button
-      *ngIf="!timer; else progress"
-      tuiIconButton
-      icon="tuiIconRefreshCcwLarge"
-      size="m"
-      class="controls__refresh"
-      (click)="onRefresh()"
-      [disabled]="(httpLoading | async) ?? false"
-    ></button>
+    @if (!timer) {
+      <button
+        tuiIconButton
+        icon="tuiIconRefreshCcwLarge"
+        size="m"
+        class="controls__refresh"
+        (click)="onRefresh()"
+        [disabled]="(httpLoading | async) ?? false"
+      ></button>
+    } @else {
+      <label class="progress" tuiProgressLabel>
+        <span class="counter-text">{{ timer }}</span>
+        <tui-progress-circle
+          new
+          size="xs"
+          [max]="timerMax"
+          [value]="timer || 0"
+          />
+      </label>
+    }
   </div>
 
   <ng-template #progress>
@@ -70,7 +84,7 @@
         size="xs"
         [max]="timerMax"
         [value]="timer || 0"
-      />
+        />
     </label>
   </ng-template>
 </div>

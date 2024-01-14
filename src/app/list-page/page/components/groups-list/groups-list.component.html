@@ -8,23 +8,36 @@
     >
       New Group
     </button>
-    <button
-      *ngIf="!timerService.timers['groups']; else progress"
-      tuiButton
-      size="s"
-      (click)="onRefresh()"
-      [disabled]="(loading$ | async) ?? false"
-      class="tui-space_bottom-5"
-    >
-      Refresh
-    </button>
+    @if (!timerService.timers["groups"]) {
+      <button
+        tuiButton
+        size="s"
+        (click)="onRefresh()"
+        [disabled]="(loading$ | async) ?? false"
+        class="tui-space_bottom-5"
+      >
+        Refresh
+      </button>
+    } @else {
+      <label class="progress tui-space_bottom-3" tuiProgressLabel>
+        <span class="counter-text">{{ timerService.timers["groups"] }}</span>
+        <tui-progress-circle
+          new
+          size="xs"
+          [max]="timerService.max"
+          [value]="timerService.timers['groups'] || 0"
+        />
+      </label>
+    }
   </div>
 
   <tui-scrollbar>
     <div class="groups-list">
-      <div *ngFor="let group of groups">
-        <app-group [group]="group" (uidDeleted)="onDeleteGroup($event)" />
-      </div>
+      @for (group of groups; track group) {
+        <div>
+          <app-group [group]="group" (uidDeleted)="onDeleteGroup($event)" />
+        </div>
+      }
     </div>
   </tui-scrollbar>
 

@@ -1,141 +1,153 @@
-<div class="container" *ngIf="profileData$ | async as profile">
-  <button
-    class="logout-btn tui-space_top-5 tui-space_right-5"
-    tuiButton
-    size="s"
-    (click)="onLogOut()"
-    [disabled]="(loading$ | async) ?? false"
-  >
-    Log Out
-  </button>
-  <ng-container>
-    <div
-      class="profile tui-space_top-5"
-      tuiSurface="flat"
-      (ngSubmit)="onSubmit()"
-    >
-      <div class="profile__row" *ngIf="!editingName; else name">
-        <span
-          class="profile__row-title tui-text_body-m"
-          [class.tui-skeleton]="(loading$ | async) ?? false"
-          >Name:</span
+@if (profileData$ | async; as profile) {
+  <div class="container">
+    <button
+      class="logout-btn tui-space_top-5 tui-space_right-5"
+      tuiButton
+      size="s"
+      (click)="onLogOut()"
+      [disabled]="(loading$ | async) ?? false"
+      >
+      Log Out
+    </button>
+    <ng-container>
+      <div
+        class="profile tui-space_top-5"
+        tuiSurface="flat"
+        (ngSubmit)="onSubmit()"
         >
-        <span
-          class="profile__row-value tui-text_body-m"
-          [class.tui-skeleton]="!profile.name || ((loading$ | async) ?? false)"
-        >
-          {{ profile.name || "SkeletonPlaceholder" }}
-        </span>
-      </div>
-
-      <div class="profile__row">
-        <span
-          class="profile__row-title tui-text_body-m"
-          [class.tui-skeleton]="(loading$ | async) ?? false"
-          >Email:</span
-        >
-        <span
-          class="profile__row-value tui-text_body-m"
-          [class.tui-skeleton]="!profile.email || ((loading$ | async) ?? false)"
-        >
-          {{ profile.email || "SkeletonPlaceholder" }}
-        </span>
-      </div>
-
-      <div class="profile__row">
-        <span
-          class="profile__row-title tui-text_body-m"
-          [class.tui-skeleton]="(loading$ | async) ?? false"
-          >Uid:</span
-        >
-        <span
-          class="profile__row-value tui-text_body-m"
-          [class.tui-skeleton]="!profile.uid || ((loading$ | async) ?? false)"
-        >
-          {{ profile.uid || "SkeletonShort" }}
-        </span>
-      </div>
-
-      <div class="profile__row">
-        <span
-          class="profile__row-title tui-text_body-m"
-          [class.tui-skeleton]="(loading$ | async) ?? false"
-          >Created at:</span
-        >
-        <span
-          class="profile__row-value tui-text_body-m"
+        @if (!editingName) {
+          <div class="profile__row">
+            <span
+              class="profile__row-title tui-text_body-m"
+              [class.tui-skeleton]="(loading$ | async) ?? false"
+              >Name:</span
+              >
+              <span
+                class="profile__row-value tui-text_body-m"
+                [class.tui-skeleton]="!profile.name || ((loading$ | async) ?? false)"
+                >
+                {{ profile.name || "SkeletonPlaceholder" }}
+              </span>
+            </div>
+          } @else {
+            <div class="profile__row">
+              <span class="profile__row-title tui-text_body-m">Name:</span>
+              <form [formGroup]="this.nameForm" class="name_form">
+                <tui-input
+                  class="name_input"
+                  formControlName="name"
+                  tuiTextfieldSize="s"
+                  >
+                  <input tuiTextfield />
+                </tui-input>
+                <tui-error formArrayName="name" [error]="[] | tuiFieldError | async" />
+              </form>
+            </div>
+          }
+          <div class="profile__row">
+            <span
+              class="profile__row-title tui-text_body-m"
+              [class.tui-skeleton]="(loading$ | async) ?? false"
+              >Email:</span
+              >
+              <span
+                class="profile__row-value tui-text_body-m"
+                [class.tui-skeleton]="!profile.email || ((loading$ | async) ?? false)"
+                >
+                {{ profile.email || "SkeletonPlaceholder" }}
+              </span>
+            </div>
+            <div class="profile__row">
+              <span
+                class="profile__row-title tui-text_body-m"
+                [class.tui-skeleton]="(loading$ | async) ?? false"
+                >Uid:</span
+                >
+                <span
+                  class="profile__row-value tui-text_body-m"
+                  [class.tui-skeleton]="!profile.uid || ((loading$ | async) ?? false)"
+                  >
+                  {{ profile.uid || "SkeletonShort" }}
+                </span>
+              </div>
+              <div class="profile__row">
+                <span
+                  class="profile__row-title tui-text_body-m"
+                  [class.tui-skeleton]="(loading$ | async) ?? false"
+                  >Created at:</span
+                  >
+                  <span
+                    class="profile__row-value tui-text_body-m"
           [class.tui-skeleton]="
             !profile.createdAt || ((loading$ | async) ?? false)
           "
-        >
-          {{ (profile.createdAt | date) || "SkeletonShort" }}
-        </span>
-      </div>
-
-      <div class="tui-form__buttons">
-        <tui-loader [showLoader]="(loading$ | async) ?? false" [overlay]="true">
-          <button
-            *ngIf="!editingName; else submitBbtn"
-            size="s"
-            tuiButton
-            class="tui-form__button"
+                    >
+                    {{ (profile.createdAt | date) || "SkeletonShort" }}
+                  </span>
+                </div>
+                <div class="tui-form__buttons">
+                  <tui-loader [showLoader]="(loading$ | async) ?? false" [overlay]="true">
+                    @if (!editingName) {
+                      <button
+                        size="s"
+                        tuiButton
+                        class="tui-form__button"
             [disabled]="
               !profile.uid ||
               !profile.name ||
               !profile.email ||
               !profile.createdAt
             "
-            (click)="editingName = !editingName"
-            [class.tui-skeleton]="loading$ | async"
-          >
-            Edit name
-          </button>
-        </tui-loader>
-
-        <button
-          size="s"
-          tuiButton
-          class="tui-form__button"
-          appearance="flat"
-          (click)="handleChancel()"
-          [class.tui-skeleton]="!profile.uid"
-          *ngIf="editingName"
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  </ng-container>
-
-  <ng-template #name>
-    <div class="profile__row">
-      <span class="profile__row-title tui-text_body-m">Name:</span>
-      <form [formGroup]="this.nameForm" class="name_form">
-        <tui-input
-          class="name_input"
-          formControlName="name"
-          tuiTextfieldSize="s"
-        >
-          <input tuiTextfield />
-        </tui-input>
-        <tui-error formArrayName="name" [error]="[] | tuiFieldError | async" />
-      </form>
-    </div>
-  </ng-template>
-
-  <ng-template #submitBbtn>
-    <button
-      size="s"
-      tuiButton
-      class="tui-form__button"
+                        (click)="editingName = !editingName"
+                        [class.tui-skeleton]="loading$ | async"
+                        >
+                        Edit name
+                      </button>
+                    } @else {
+                      <button
+                        size="s"
+                        tuiButton
+                        class="tui-form__button"
       [disabled]="
         nameForm.get('name')?.value === profile.name ||
         nameForm.invalid ||
         ((loading$ | async) ?? false)
       "
-      (click)="onSubmit()"
-    >
-      Submit
-    </button>
-  </ng-template>
-</div>
+                        (click)="onSubmit()"
+                        >
+                        Submit
+                      </button>
+                    }
+                  </tui-loader>
+                  @if (editingName) {
+                    <button
+                      size="s"
+                      tuiButton
+                      class="tui-form__button"
+                      appearance="flat"
+                      (click)="handleChancel()"
+                      [class.tui-skeleton]="!profile.uid"
+                      >
+                      Cancel
+                    </button>
+                  }
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #name>
+              <div class="profile__row">
+                <span class="profile__row-title tui-text_body-m">Name:</span>
+                <form [formGroup]="this.nameForm" class="name_form">
+                  <tui-input
+                    class="name_input"
+                    formControlName="name"
+                    tuiTextfieldSize="s"
+                    >
+                    <input tuiTextfield />
+                  </tui-input>
+                  <tui-error formArrayName="name" [error]="[] | tuiFieldError | async" />
+                </form>
+              </div>
+            </ng-template>
+          </div>
+        }

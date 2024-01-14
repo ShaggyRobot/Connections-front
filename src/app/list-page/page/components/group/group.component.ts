@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -7,14 +8,25 @@ import {
   Output,
 } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TuiAlertService } from '@taiga-ui/core';
+import { TuiAlertService, TuiButtonModule, TuiDialogModule } from '@taiga-ui/core';
+import { TuiIconModule, TuiSurfaceModule } from '@taiga-ui/experimental';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { TGroup } from 'src/app/list-page/models/list-page.model';
 import { ListPageService } from 'src/app/list-page/services/list-page.service';
 import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector';
 
 @Component({
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    RouterModule,
+    TuiIconModule,
+    TuiSurfaceModule,
+    TuiDialogModule,
+    TuiButtonModule
+],
   selector: 'app-group',
   templateUrl: './group.component.html',
   styleUrls: ['./group.component.scss'],

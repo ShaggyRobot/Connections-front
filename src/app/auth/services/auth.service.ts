@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { HttpClient, HttpResponse } from '@angular/common/http';
-import { catchError, finalize, map, tap } from 'rxjs/operators';
-import { Observable, of, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
 import { TProfile } from 'src/app/store/state.model';
 import { Store } from '@ngrx/store';
 import { authActions } from 'src/app/store/actions/auth-actions';

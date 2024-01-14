@@ -1,11 +1,25 @@
 import { animate, style, transition, trigger } from '@angular/animations';
-import { Component, OnInit, Output } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { tuiToggleOptionsProvider } from '@taiga-ui/kit';
+import { AsyncPipe } from '@angular/common';
+import { Component, Output } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { TuiButtonModule } from '@taiga-ui/core';
+import { TuiSurfaceModule } from '@taiga-ui/experimental';
+import { TuiToggleModule, tuiToggleOptionsProvider } from '@taiga-ui/kit';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
+  standalone: true,
+  imports: [
+    RouterModule,
+    ReactiveFormsModule,
+    AsyncPipe,
+    TuiButtonModule,
+    TuiSurfaceModule,
+    TuiToggleModule
+],
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],

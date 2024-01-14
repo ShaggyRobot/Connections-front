@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit/tokens';
 import { passwordValidator } from './validators/passwordValidator';
 import { tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk';
@@ -12,8 +12,13 @@ import { Router } from '@angular/router';
 import { emailInUseValidator } from 'src/app/auth/pages/sign-up/validators/emailInUseValidator';
 import { Store } from '@ngrx/store';
 import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector';
+import { CommonModule } from '@angular/common';
+import { TuiErrorModule, TuiTextfieldControllerModule, TuiButtonModule } from '@taiga-ui/core';
+import { TuiSurfaceModule } from '@taiga-ui/experimental';
+import { TuiInputModule, TuiFieldErrorPipeModule } from '@taiga-ui/kit';
 
 @Component({
+  standalone: true,
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
@@ -27,6 +32,16 @@ import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector'
         pattern: 'Only letters and whitespaces.',
       },
     },
+  ],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TuiErrorModule,
+    TuiInputModule,
+    TuiFieldErrorPipeModule,
+    TuiTextfieldControllerModule,
+    TuiButtonModule,
+    TuiSurfaceModule
   ],
 })
 export class SignUpComponent {

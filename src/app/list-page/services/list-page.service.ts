@@ -94,7 +94,24 @@ export class ListPageService {
       .post<{ groupID: string }>('groups/create', {
         name: groupName,
       })
-      .pipe(catchError((e) => throwError(() => e)));
+      .pipe(
+        tap((res) => {
+          const { count, groups } = this.groupsData.getValue();
+          this.groupsData.next({
+            count: count + 1,
+            groups: [
+              ...groups,
+              {
+                createdAt: String(new Date()),
+                id: res.groupID,
+                name: groupName,
+                createdBy: localStorage.getItem('uid') || 'null',
+              },
+            ],
+          });
+        }),
+        catchError((e) => throwError(() => e)),
+      );
   }
 
   deleteGroup(groupId: string) {

@@ -1,17 +1,25 @@
-import {
-  Component,
-  ElementRef,
-  Inject,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { AsyncPipe, DatePipe } from '@angular/common';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TuiAlertService } from '@taiga-ui/core/components/alert';
-import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit';
+import {
+  TuiButtonModule,
+  TuiErrorModule,
+  TuiLoaderModule,
+  TuiTextfieldControllerModule,
+} from '@taiga-ui/core';
+import {
+  TuiAlertModule,
+  TuiAlertService,
+} from '@taiga-ui/core/components/alert';
+import { TuiSurfaceModule } from '@taiga-ui/experimental';
+import {
+  TUI_VALIDATION_ERRORS,
+  TuiFieldErrorPipeModule,
+  TuiInputModule,
+} from '@taiga-ui/kit';
 
 import {
   BehaviorSubject,
@@ -35,6 +43,20 @@ import {
 import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector';
 
 @Component({
+  standalone: true,
+  imports: [
+    DatePipe,
+    AsyncPipe,
+    ReactiveFormsModule,
+    TuiErrorModule,
+    TuiAlertModule,
+    TuiInputModule,
+    TuiButtonModule,
+    TuiLoaderModule,
+    TuiSurfaceModule,
+    TuiFieldErrorPipeModule,
+    TuiTextfieldControllerModule
+],
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
@@ -58,7 +80,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
   public editingName = false;
 
   nameForm = this.fb.group({
-    name: ['', [Validators.required, Validators.pattern(/^[\p{L} ]+$/u), Validators.maxLength(40)]],
+    name: [
+      '',
+      [
+        Validators.required,
+        Validators.pattern(/^[\p{L} ]+$/u),
+        Validators.maxLength(40),
+      ],
+    ],
   });
 
   constructor(
@@ -84,7 +113,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
           this.name$.next(data.name);
         }
 
-        if (!data.uid && loggedIn) {
+        if (
+          (!data.uid || !data.name || !data.createdAt || !data.email) &&
+          loggedIn
+        ) {
           this.store.dispatch(authActions.getProfile());
         }
       });

@@ -9,13 +9,14 @@
     </div>
   </div>
 
-  <div class="message__text" *ngIf="!testForLink(message.message); else link">
-    {{ message.message }}
-  </div>
+  @if (!testForLink(message.message)) {
+    <div class="message__text">
+      {{ message.message }}
+    </div>
+  } @else {
+    <div class="message__text">
+      <a tuiLink icon="tuiIconLink2" target="_blank" href="{{ message.message }}">{{ message.message }}</a>
+    </div>
+  }
 </div>
 
-<ng-template #link>
-  <div class="message__text">
-    <a tuiLink icon="tuiIconLink2" target="_blank" href="{{ message.message }}">{{ message.message }}</a>
-  </div>
-</ng-template>

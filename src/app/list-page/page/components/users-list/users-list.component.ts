@@ -1,6 +1,9 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TuiAlertService } from '@taiga-ui/core';
+import { TuiAlertService, TuiButtonModule, TuiScrollbarModule, TuiTextfieldControllerModule } from '@taiga-ui/core';
+import { TuiSurfaceModule } from '@taiga-ui/experimental';
+import { TuiInputModule, TuiProgressModule } from '@taiga-ui/kit';
 import {
   Observable,
   Subject,
@@ -12,6 +15,7 @@ import {
 } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { TConversation, TUser } from 'src/app/list-page/models/list-page.model';
+import { UserComponent } from 'src/app/list-page/page/components/user/user.component';
 import { ListPageService } from 'src/app/list-page/services/list-page.service';
 import { TimerService } from 'src/app/list-page/services/timer.service';
 import { PersonalConversationService } from 'src/app/personal-conversation/services/personal-conversation.service';
@@ -20,6 +24,15 @@ import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector'
 export type TUserWithConversation = TUser & { conversation?: TConversation };
 
 @Component({
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    UserComponent,
+    TuiScrollbarModule,
+    TuiProgressModule,
+    TuiButtonModule,
+    TuiSurfaceModule
+],
   selector: 'app-users-list',
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
