@@ -51,25 +51,32 @@ import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector'
 })
 export class ConversationComponent implements OnChanges {
   @Input() messages!: TMessageWithName[];
+
   @Input() timer!: number;
+
   @Input() timerMax!: number;
+
   @Input() countdown!: number;
+
   @Input() owned!: boolean;
+
   @Output() delete = new EventEmitter<void>();
 
   @Output() refresh = new EventEmitter<void>();
+
   @Output() outgoingMessage = new EventEmitter<string>();
 
   @ViewChild(TuiScrollbarComponent, { read: ElementRef })
   private readonly scrollBar?: ElementRef<HTMLElement>;
 
   public message: string = '';
+
   httpLoading = this.store.select(selectHttpLoading);
 
   constructor(
     private store: Store,
     private router: Router,
-    ) {}
+  ) {}
 
   onSend() {
     if (this.message) {

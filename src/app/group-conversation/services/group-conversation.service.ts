@@ -38,7 +38,7 @@ export class GroupConversationService {
       })
       .pipe(
         tap(() => {
-          if (withTimer) this.timer.startTimer(id);
+          if (withTimer) this.timer.startTimer(`${id}@group`);
         }),
       );
   }

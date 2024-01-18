@@ -55,8 +55,8 @@ import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector'
     TuiLoaderModule,
     TuiSurfaceModule,
     TuiFieldErrorPipeModule,
-    TuiTextfieldControllerModule
-],
+    TuiTextfieldControllerModule,
+  ],
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
@@ -71,12 +71,17 @@ import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector'
 })
 export class ProfileComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
+
   private name$ = new BehaviorSubject<string | undefined>('');
+
   public error$ = this.store.select(selectProfileError);
+
   public profileData$ = this.store.select(selectProfile);
+
   public loading$ = this.store.select(selectHttpLoading);
 
   private alertPending = false;
+
   public editingName = false;
 
   nameForm = this.fb.group({

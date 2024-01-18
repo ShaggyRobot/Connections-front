@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TuiRootModule, TuiThemeNightModule } from '@taiga-ui/core';
@@ -7,12 +6,7 @@ import { HeaderComponent } from 'src/app/core/header/header.component';
 
 @Component({
   standalone: true,
-  imports: [
-    HeaderComponent,
-    RouterModule,
-    TuiRootModule,
-    TuiThemeNightModule
-],
+  imports: [HeaderComponent, RouterModule, TuiRootModule, TuiThemeNightModule],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
@@ -29,10 +23,15 @@ import { HeaderComponent } from 'src/app/core/header/header.component';
 })
 export class AppComponent {
   title = 'connections';
+
   public theme = false;
 
   handleTheme(val: boolean) {
     this.theme = val;
-    val ? localStorage.setItem('night', '') : localStorage.removeItem('night');
+    if (val) {
+      localStorage.setItem('night', '');
+    } else {
+      localStorage.removeItem('night');
+    }
   }
 }

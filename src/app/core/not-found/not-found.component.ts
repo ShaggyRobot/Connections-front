@@ -6,12 +6,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   standalone: true,
-  imports: [
-    RouterLink,
-    AsyncPipe,
-
-    TuiButtonModule
-  ],
+  imports: [RouterLink, AsyncPipe, TuiButtonModule],
   selector: 'app-not-found',
   templateUrl: './not-found.component.html',
   styleUrls: ['./not-found.component.scss'],

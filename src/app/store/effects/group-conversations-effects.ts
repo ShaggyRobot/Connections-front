@@ -21,8 +21,8 @@ export class GroupConversationsEffects {
       switchMap(({ id, withTimer }) =>
         this.store.select(selectGroupConversation(id)).pipe(
           take(1),
-          switchMap((messages) => {
-            const since = messages.at(-1)?.createdAt;
+          switchMap((messageList) => {
+            const since = messageList.at(-1)?.createdAt;
 
             return this.conversations
               .getConversation(id, since, withTimer)
@@ -40,11 +40,10 @@ export class GroupConversationsEffects {
                     return groupConversationsActions.getGroupConversationsSinceSuccess(
                       { id, messages },
                     );
-                  } else {
-                    return groupConversationsActions.getGroupConversationsSuccess(
-                      { id, messages },
-                    );
                   }
+                  return groupConversationsActions.getGroupConversationsSuccess(
+                    { id, messages },
+                  );
                 }),
 
                 catchError((e) =>
@@ -69,8 +68,8 @@ export class GroupConversationsEffects {
           switchMap(() =>
             this.store.select(selectGroupConversation(groupId)).pipe(take(1)),
           ),
-          switchMap((messages) => {
-            const since = messages.at(-1)?.createdAt;
+          switchMap((messageList) => {
+            const since = messageList.at(-1)?.createdAt;
 
             return this.conversations.getConversation(groupId, since).pipe(
               map((result) => {
@@ -86,11 +85,11 @@ export class GroupConversationsEffects {
                   return groupConversationsActions.getGroupConversationsSinceSuccess(
                     { id: groupId, messages },
                   );
-                } else {
-                  return groupConversationsActions.getGroupConversationsSuccess(
-                    { id: groupId, messages },
-                  );
                 }
+                return groupConversationsActions.getGroupConversationsSuccess({
+                  id: groupId,
+                  messages,
+                });
               }),
 
               catchError((e) => {

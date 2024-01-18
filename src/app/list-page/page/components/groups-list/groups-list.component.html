@@ -33,9 +33,9 @@
 
   <tui-scrollbar>
     <div class="groups-list">
-      @for (group of groups; track group) {
+      @for (group of groups$ | async; track groups) {
         <div>
-          <app-group [group]="group" (uidDeleted)="onDeleteGroup($event)" />
+          <app-group [group]="group" />
         </div>
       }
     </div>
@@ -56,7 +56,11 @@
 
 <ng-template
   let-observer
-  [tuiDialogOptions]="{ label: 'Create New Group', size: 's' }"
+  [tuiDialogOptions]="{
+    label: 'Create New Group',
+    size: 's',
+    closeable: false
+  }"
   [(tuiDialog)]="dialogOpen"
 >
   <form
@@ -65,6 +69,7 @@
     (ngSubmit)="onSubmit(this.form.get('groupName')?.value)"
   >
     <tui-input
+      tuiAutoFocus
       formControlName="groupName"
       tuiTextfieldSize="m"
       tuiHintContent="Only letters, digits and spaces, no longer than 30 chars."

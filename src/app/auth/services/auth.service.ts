@@ -5,12 +5,10 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { TProfile } from 'src/app/store/state.model';
 import { Store } from '@ngrx/store';
-import { authActions } from 'src/app/store/actions/auth-actions';
-import { personalConversationsActions } from 'src/app/store/actions/personal-conversation-actions';
-import { groupConversationsActions } from 'src/app/store/actions/group-conversations-actions';
 import { Router } from '@angular/router';
 import { ListPageService } from 'src/app/list-page/services/list-page.service';
 import { PersonalConversationService } from 'src/app/personal-conversation/services/personal-conversation.service';
+import { storeReset } from 'src/app/store/actions/store-reset';
 
 export type TSignUpFormData = { email: string; name: string; password: string };
 
@@ -44,7 +42,9 @@ export type TSignInFormData = Pick<TSignUpFormData, 'email' | 'password'>;
 })
 export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
+
   public isLoggedIn$ = this.isLoggedInSubject.asObservable();
+
   public uid$ = new BehaviorSubject<string>('');
 
   constructor(
@@ -78,7 +78,7 @@ export class AuthService {
     return this.http
       .post('registration', formData, { observe: 'response' })
       .pipe(
-        map((res: HttpResponse<Partial<TAuthUpResponse>>): TAuthUpResponse => {
+        map((): TAuthUpResponse => {
           this.isLoggedInSubject.next(true);
           return { OK: true };
         }),
@@ -89,19 +89,20 @@ export class AuthService {
   signIn(formData: TSignInFormData) {
     return this.http.post('login', formData, { observe: 'response' }).pipe(
       tap((res: HttpResponse<Partial<TAuthUpResponse>>) => {
-        this.isLoggedInSubject.next(true);
-
         const profileData = {
           token: res.body?.token,
           uid: res.body?.uid,
           login: formData.email,
         };
 
-        res.body?.uid && this.uid$.next(res.body?.uid);
-
         Object.entries(profileData).forEach((entry) => {
           localStorage.setItem(entry[0], String(entry[1]));
         });
+
+        this.isLoggedInSubject.next(true);
+        if (res.body?.uid) {
+          this.uid$.next(res.body?.uid);
+        }
       }),
       catchError((e) => throwError(() => e)),
     );
@@ -114,14 +115,7 @@ export class AuthService {
 
         this.uid$.next('');
 
-        this.store.dispatch(authActions.profileResetProfileState());
-        this.store.dispatch(
-          personalConversationsActions.resetPersonalConversation(),
-        );
-        this.store.dispatch(groupConversationsActions.resetGroupConversation());
-
-        this.conversationsService.resetState();
-        this.listPageService.resetState();
+        this.store.dispatch(storeReset());
 
         ['token', 'uid', 'login'].forEach((entry) => {
           localStorage.removeItem(entry);
@@ -155,7 +149,9 @@ export class AuthService {
           };
         }),
         tap((data) => {
-          data.uid && this.uid$.next(data.uid);
+          if (data.uid) {
+            this.uid$.next(data.uid);
+          }
         }),
         catchError((e) => throwError(() => e)),
       );
@@ -163,7 +159,7 @@ export class AuthService {
 
   updateName(name: string) {
     return this.http.put('profile', { name }).pipe(
-      map((res) => {
+      map(() => {
         return name;
       }),
       catchError((e) => throwError(() => e)),

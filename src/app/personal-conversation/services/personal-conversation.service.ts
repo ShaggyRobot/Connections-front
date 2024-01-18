@@ -1,18 +1,11 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  BehaviorSubject,
-  Observable,
-  catchError,
-  map,
-  tap,
-  throwError,
-} from 'rxjs';
-import {
-  TConversation,
-  TConversationsListHttpResponse,
-} from 'src/app/list-page/models/list-page.model';
+import { Store } from '@ngrx/store';
+import { catchError, of, tap } from 'rxjs';
+
 import { TimerService } from 'src/app/list-page/services/timer.service';
+import { conversationsListActions } from 'src/app/store/actions/conversations-list-actions';
+import { personalConversationsActions } from 'src/app/store/actions/personal-conversation-actions';
 
 export type TPersonalConversationHttpResponse = {
   Count: number;
@@ -33,13 +26,10 @@ export type TPersonalConversationHttpResponse = {
   providedIn: 'root',
 })
 export class PersonalConversationService {
-  public conversationsList: TConversation[] | null = null;
-  private conversations = new BehaviorSubject<TConversation[]>([]);
-  public conversations$ = this.conversations.asObservable();
-
   constructor(
     private http: HttpClient,
     private timer: TimerService,
+    private store: Store,
   ) {}
 
   getConversation(id: string, since?: string, withTimer?: boolean) {
@@ -51,28 +41,8 @@ export class PersonalConversationService {
       .get<TPersonalConversationHttpResponse>('conversations/read', { params })
       .pipe(
         tap(() => {
-          if (withTimer) this.timer.startTimer(id);
+          if (withTimer) this.timer.startTimer(`${id}@personal`);
         }),
-      );
-  }
-
-  getConversations(): Observable<TConversation[]> {
-    return this.http
-      .get<TConversationsListHttpResponse>('conversations/list')
-      .pipe(
-        map((response) =>
-          response.Items.map(
-            ({ id, companionID }): TConversation => ({
-              id: id.S,
-              companionId: companionID.S,
-            }),
-          ),
-        ),
-        tap((conversations) => {
-          this.conversations.next(conversations);
-          this.conversationsList = conversations;
-        }),
-        catchError((e) => throwError(() => e)),
       );
   }
 
@@ -87,10 +57,18 @@ export class PersonalConversationService {
       })
       .pipe(
         tap((response) => {
-          this.conversations.next([
-            ...this.conversations.getValue(),
-            { id: response.conversationID, companionId: companion },
-          ]);
+          this.store.dispatch(
+            conversationsListActions.createConversationSuccess({
+              companionId: companion,
+              id: response.conversationID,
+            }),
+          );
+        }),
+        catchError((error) => {
+          this.store.dispatch(
+            conversationsListActions.conversationsListError({ error }),
+          );
+          return of(error);
         }),
       );
   }
@@ -99,16 +77,22 @@ export class PersonalConversationService {
     const params = new HttpParams().set('conversationID', conversationId);
     return this.http.delete('conversations/delete', { params }).pipe(
       tap(() => {
-        this.conversations.next(
-          this.conversations
-            .getValue()
-            .filter((value) => value.id !== conversationId),
+        this.store.dispatch(
+          conversationsListActions.deleteConversationSuccess({
+            conversationID: conversationId,
+          }),
+        );
+
+        this.store.dispatch(
+          personalConversationsActions.deletePersonalConversation({
+            id: conversationId,
+          }),
         );
       }),
     );
   }
 
   resetState() {
-    this.conversationsList = null;
+    this.store.dispatch(conversationsListActions.clearConversations());
   }
 }

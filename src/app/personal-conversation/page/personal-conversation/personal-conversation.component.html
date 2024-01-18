@@ -1,6 +1,6 @@
 <app-conversation
   [messages]="messagesWithNames"
-  [timer]="timer.timers[id]"
+  [timer]="timer.timers[id + '@personal']"
   [timerMax]="timer.max"
   [owned]="true"
   (outgoingMessage)="onSend($event)"

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { map, takeWhile, tap, timer } from 'rxjs';
+import { map, takeWhile, timer } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TimerService {
   public timers: Record<string, number> = {};
+
   public max = 60;
 
   startTimer(id: string) {
@@ -16,7 +17,9 @@ export class TimerService {
           takeWhile((val) => val >= 0),
         )
         .subscribe({
-          next: (v) => (this.timers[id] = v),
+          next: (v) => {
+            this.timers[id] = v;
+          },
           complete: () => {
             delete this.timers[id];
           },

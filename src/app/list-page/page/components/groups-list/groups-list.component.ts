@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { TuiAutoFocusModule } from '@taiga-ui/cdk';
 import {
   TuiAlertService,
   TuiButtonModule,
@@ -12,10 +13,16 @@ import {
 } from '@taiga-ui/core';
 import { TuiSurfaceModule } from '@taiga-ui/experimental';
 import { TuiInputModule, TuiProgressModule } from '@taiga-ui/kit';
+import { takeWhile } from 'rxjs';
 import { TGroup } from 'src/app/list-page/models/list-page.model';
 import { GroupComponent } from 'src/app/list-page/page/components/group/group.component';
 import { ListPageService } from 'src/app/list-page/services/list-page.service';
 import { TimerService } from 'src/app/list-page/services/timer.service';
+import { groupsListActions } from 'src/app/store/actions/groups-list-actions';
+import {
+  selectGroupsList,
+  selectGroupsListError,
+} from 'src/app/store/selectors/groups-list-selector';
 import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector';
 
 @Component({
@@ -24,22 +31,28 @@ import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector'
     AsyncPipe,
     ReactiveFormsModule,
     GroupComponent,
+
     TuiHintModule,
     TuiInputModule,
     TuiDialogModule,
     TuiButtonModule,
     TuiSurfaceModule,
     TuiProgressModule,
+    TuiAutoFocusModule,
     TuiScrollbarModule,
-    TuiTextfieldControllerModule
-],
+    TuiTextfieldControllerModule,
+  ],
   selector: 'app-groups-list',
   templateUrl: './groups-list.component.html',
   styleUrls: ['./groups-list.component.scss'],
 })
 export class GroupsListComponent implements OnInit {
   public groups: TGroup[] = [];
+
+  public groups$ = this.store.select(selectGroupsList());
+
   public loading$ = this.store.select(selectHttpLoading);
+
   public dialogOpen = false;
 
   constructor(
@@ -62,22 +75,27 @@ export class GroupsListComponent implements OnInit {
   });
 
   ngOnInit(): void {
-
-    this.listPageService.groupsData$.subscribe((data) => {
-      this.groups = data.groups;
+    this.store.select(selectGroupsList()).subscribe({
+      next: (list) => {
+        this.groups = list;
+      },
     });
 
-    if (!this.listPageService.groups.length) {
-      this.listPageService.getGroups().subscribe({
-        error: (e) => {
+    this.store.select(selectGroupsListError()).subscribe({
+      next: (e) => {
+        if (e) {
           this.alerts
             .open(`${e.message}`, {
               label: '(╯°□°）╯︵ ┻━┻',
               status: 'error',
             })
             .subscribe();
-        },
-      });
+        }
+      },
+    });
+
+    if (!this.groups.length) {
+      this.store.dispatch(groupsListActions.getGroupsList({}));
     }
   }
 
@@ -87,45 +105,23 @@ export class GroupsListComponent implements OnInit {
 
   onSubmit(name: string | null | undefined) {
     if (name) {
-      this.listPageService.createGroup(name).subscribe({
-        next: () => {
-          this.form.reset();
-          this.dialogOpen = false;
-
-          this.alerts
-            .open('Group was created successfully.', {
-              label: '(*^o^)人 (^o^*)',
-              status: 'success',
-            })
-            .subscribe();
-        },
-
-        error: (e) => {
-          this.alerts
-            .open(`${e.message}`, {
-              label: '(╯°□°）╯︵ ┻━┻',
-              status: 'error',
-            })
-            .subscribe();
-        },
-      });
+      this.store.dispatch(groupsListActions.createGroup({ groupName: name }));
+      this.loading$
+        .pipe(takeWhile((loading) => loading, true))
+        .subscribe((loading) => {
+          if (!loading) {
+            this.dialogOpen = false;
+            this.form.reset();
+          }
+        });
     }
   }
 
   onRefresh() {
-    this.listPageService.getGroups(true).subscribe({
-      error: (e) => {
-        this.alerts
-          .open(`${e.message}`, {
-            label: '(╯°□°）╯︵ ┻━┻',
-            status: 'error',
-          })
-          .subscribe();
-      },
-    });
+    this.store.dispatch(groupsListActions.getGroupsList({ withTimer: true }));
   }
 
-  onDeleteGroup(id: string) {
-    this.groups = this.groups.filter((group) => group.id !== id);
-  }
+  // onDeleteGroup(id: string) {
+  //   this.groups = this.groups.filter((group) => group.id !== id);
+  // }
 }

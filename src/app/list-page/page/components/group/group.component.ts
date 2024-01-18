@@ -10,11 +10,17 @@ import {
 import { FormBuilder, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TuiAlertService, TuiButtonModule, TuiDialogModule } from '@taiga-ui/core';
+import {
+  TuiAlertService,
+  TuiButtonModule,
+  TuiDialogModule,
+} from '@taiga-ui/core';
 import { TuiIconModule, TuiSurfaceModule } from '@taiga-ui/experimental';
+import { takeWhile } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { TGroup } from 'src/app/list-page/models/list-page.model';
-import { ListPageService } from 'src/app/list-page/services/list-page.service';
+
+import { groupsListActions } from 'src/app/store/actions/groups-list-actions';
 import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector';
 
 @Component({
@@ -25,14 +31,15 @@ import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector'
     TuiIconModule,
     TuiSurfaceModule,
     TuiDialogModule,
-    TuiButtonModule
-],
+    TuiButtonModule,
+  ],
   selector: 'app-group',
   templateUrl: './group.component.html',
   styleUrls: ['./group.component.scss'],
 })
 export class GroupComponent implements OnInit {
   @Input() group!: TGroup;
+
   @Output() uidDeleted: EventEmitter<string> = new EventEmitter();
 
   httpLoading = this.store.select(selectHttpLoading);
@@ -46,7 +53,6 @@ export class GroupComponent implements OnInit {
     private store: Store,
     private auth: AuthService,
     private fb: FormBuilder,
-    private listPageService: ListPageService,
   ) {}
 
   ngOnInit(): void {
@@ -60,26 +66,20 @@ export class GroupComponent implements OnInit {
   });
 
   onDelete() {
-    this.listPageService.deleteGroup(this.group.id).subscribe({
-      next: () => {
-        this.uidDeleted.emit(this.group.id);
-        this.dialogOpen = false;
-
-        this.alerts
-          .open('Group was deleted successfully.', {
-            label: '(*^o^)人 (^o^*)',
-            status: 'success',
-          })
-          .subscribe();
-      },
-
-      error: (e) => {
-        this.alerts
-          .open(`${e.message}`, {
-            label: '(╯°□°）╯︵ ┻━┻',
-            status: 'error',
-          })
-          .subscribe();
+    this.store.dispatch(
+      groupsListActions.deleteGroup({ groupId: this.group.id }),
+    );
+    this.httpLoading.pipe(takeWhile((loading) => loading, true)).subscribe({
+      next: (loading) => {
+        if (!loading) {
+          this.dialogOpen = false;
+          this.alerts
+            .open('Group was deleted successfully.', {
+              label: '(*^o^)人 (^o^*)',
+              status: 'success',
+            })
+            .subscribe();
+        }
       },
     });
   }

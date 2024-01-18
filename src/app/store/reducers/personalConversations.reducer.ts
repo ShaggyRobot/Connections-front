@@ -1,5 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 import { personalConversationsActions } from 'src/app/store/actions/personal-conversation-actions';
+import { storeReset } from 'src/app/store/actions/store-reset';
 import { TError, TConversations } from 'src/app/store/state.model';
 
 export type TPersonalConversationState = {
@@ -16,15 +17,18 @@ const initState: TPersonalConversationState = {
 
 export const personalConversationsReducer = createReducer(
   initState,
-  on(personalConversationsActions.getPersonalConversations, (state) => ({
-    ...state,
-    isLoading: true,
-    error: null,
-  })),
+  on(
+    personalConversationsActions.getPersonalConversation,
+    (state): TPersonalConversationState => ({
+      ...state,
+      isLoading: true,
+      error: null,
+    }),
+  ),
 
   on(
-    personalConversationsActions.getPersonalConversationsSuccess,
-    (state, data) => ({
+    personalConversationsActions.getPersonalConversationSuccess,
+    (state, data): TPersonalConversationState => ({
       ...state,
       conversations: {
         ...state.conversations,
@@ -35,15 +39,18 @@ export const personalConversationsReducer = createReducer(
     }),
   ),
 
-  on(personalConversationsActions.getPersonalConversationsSince, (state) => ({
-    ...state,
-    isLoading: true,
-    error: null,
-  })),
+  on(
+    personalConversationsActions.getPersonalConversationSince,
+    (state): TPersonalConversationState => ({
+      ...state,
+      isLoading: true,
+      error: null,
+    }),
+  ),
 
   on(
-    personalConversationsActions.getPersonalConversationsSinceSuccess,
-    (state, { id, messages }) => ({
+    personalConversationsActions.getPersonalConversationSinceSuccess,
+    (state, { id, messages }): TPersonalConversationState => ({
       ...state,
       conversations: {
         ...state.conversations,
@@ -55,8 +62,8 @@ export const personalConversationsReducer = createReducer(
   ),
 
   on(
-    personalConversationsActions.getPersonalConversationsError,
-    (state, { error }) => ({
+    personalConversationsActions.getPersonalConversationError,
+    (state, { error }): TPersonalConversationState => ({
       ...state,
       error,
     }),
@@ -64,7 +71,7 @@ export const personalConversationsReducer = createReducer(
 
   on(
     personalConversationsActions.deletePersonalConversation,
-    (state, { id }) => {
+    (state, { id }): TPersonalConversationState => {
       const conversations = { ...state.conversations };
       delete conversations[id];
 
@@ -77,5 +84,5 @@ export const personalConversationsReducer = createReducer(
     },
   ),
 
-  on(personalConversationsActions.resetPersonalConversation, () => initState),
+  on(storeReset, (): TPersonalConversationState => initState),
 );

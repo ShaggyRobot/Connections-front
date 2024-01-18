@@ -2,7 +2,6 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { AsyncPipe } from '@angular/common';
 import { Component, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { TuiButtonModule } from '@taiga-ui/core';
 import { TuiSurfaceModule } from '@taiga-ui/experimental';
@@ -18,8 +17,8 @@ import { AuthService } from 'src/app/auth/services/auth.service';
     AsyncPipe,
     TuiButtonModule,
     TuiSurfaceModule,
-    TuiToggleModule
-],
+    TuiToggleModule,
+  ],
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
@@ -48,6 +47,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 })
 export class HeaderComponent {
   logged: Observable<boolean>;
+
   @Output() theme: BehaviorSubject<boolean> = new BehaviorSubject(
     !(localStorage.getItem('night') === null),
   );

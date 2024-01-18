@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TUI_VALIDATION_ERRORS } from '@taiga-ui/kit/tokens';
-import { passwordValidator } from './validators/passwordValidator';
 import { tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk';
 import {
   AuthService,
@@ -13,9 +12,14 @@ import { emailInUseValidator } from 'src/app/auth/pages/sign-up/validators/email
 import { Store } from '@ngrx/store';
 import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector';
 import { CommonModule } from '@angular/common';
-import { TuiErrorModule, TuiTextfieldControllerModule, TuiButtonModule } from '@taiga-ui/core';
+import {
+  TuiErrorModule,
+  TuiTextfieldControllerModule,
+  TuiButtonModule,
+} from '@taiga-ui/core';
 import { TuiSurfaceModule } from '@taiga-ui/experimental';
 import { TuiInputModule, TuiFieldErrorPipeModule } from '@taiga-ui/kit';
+import { passwordValidator } from './validators/passwordValidator';
 
 @Component({
   standalone: true,
@@ -41,12 +45,14 @@ import { TuiInputModule, TuiFieldErrorPipeModule } from '@taiga-ui/kit';
     TuiFieldErrorPipeModule,
     TuiTextfieldControllerModule,
     TuiButtonModule,
-    TuiSurfaceModule
+    TuiSurfaceModule,
   ],
 })
 export class SignUpComponent {
   private takenEmails: Array<string> = [];
+
   public submitAttempted = false;
+
   public httpLoading$ = this.store.select(selectHttpLoading);
 
   public signUpForm = this.fb.group({

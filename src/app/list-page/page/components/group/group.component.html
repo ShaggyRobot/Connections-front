@@ -10,6 +10,7 @@
   @if (owned) {
     <div
       class="delete-btn"
+      tabindex="1"
       (click)="$event.stopPropagation(); dialogOpen = true"
       >
       <tui-icon [style.color]="'orangered'" icon="tuiIconXSquareLarge">

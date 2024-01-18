@@ -17,12 +17,12 @@ export class PersonalConversationsEffects {
 
   getConversation = createEffect(() => {
     return this.actions$.pipe(
-      ofType(personalConversationsActions.getPersonalConversations),
+      ofType(personalConversationsActions.getPersonalConversation),
       switchMap(({ id, withTimer }) =>
         this.store.select(selectPersonalConversation(id)).pipe(
           take(1),
-          switchMap((messages) => {
-            const since = messages.at(-1)?.createdAt;
+          switchMap((messageList) => {
+            const since = messageList.at(-1)?.createdAt;
 
             return this.conversations
               .getConversation(id, since, withTimer)
@@ -37,19 +37,18 @@ export class PersonalConversationsEffects {
                   );
 
                   if (since) {
-                    return personalConversationsActions.getPersonalConversationsSinceSuccess(
-                      { id, messages },
-                    );
-                  } else {
-                    return personalConversationsActions.getPersonalConversationsSuccess(
+                    return personalConversationsActions.getPersonalConversationSinceSuccess(
                       { id, messages },
                     );
                   }
+                  return personalConversationsActions.getPersonalConversationSuccess(
+                    { id, messages },
+                  );
                 }),
 
                 catchError((e) =>
                   of(
-                    personalConversationsActions.getPersonalConversationsError({
+                    personalConversationsActions.getPersonalConversationError({
                       error: e,
                     }),
                   ),
@@ -71,8 +70,8 @@ export class PersonalConversationsEffects {
               .select(selectPersonalConversation(conversationId))
               .pipe(take(1)),
           ),
-          switchMap((messages) => {
-            const since = messages.at(-1)?.createdAt;
+          switchMap((messageList) => {
+            const since = messageList.at(-1)?.createdAt;
 
             return this.conversations
               .getConversation(conversationId, since)
@@ -87,19 +86,18 @@ export class PersonalConversationsEffects {
                   );
 
                   if (since) {
-                    return personalConversationsActions.getPersonalConversationsSinceSuccess(
-                      { id: conversationId, messages },
-                    );
-                  } else {
-                    return personalConversationsActions.getPersonalConversationsSuccess(
+                    return personalConversationsActions.getPersonalConversationSinceSuccess(
                       { id: conversationId, messages },
                     );
                   }
+                  return personalConversationsActions.getPersonalConversationSuccess(
+                    { id: conversationId, messages },
+                  );
                 }),
 
                 catchError((e) => {
                   return of(
-                    personalConversationsActions.getPersonalConversationsError({
+                    personalConversationsActions.getPersonalConversationError({
                       error: e,
                     }),
                   );
@@ -109,7 +107,7 @@ export class PersonalConversationsEffects {
 
           catchError((e) => {
             return of(
-              personalConversationsActions.getPersonalConversationsError({
+              personalConversationsActions.getPersonalConversationError({
                 error: e,
               }),
             );

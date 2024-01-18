@@ -7,7 +7,7 @@ export type TMessageWithName = TMessage & { name: string; owner: boolean };
 
 @Component({
   standalone: true,
-  selector: 'standalone-message',
+  selector: 'app-standalone-message',
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.scss'],
   imports: [CommonModule, TuiLinkModule],

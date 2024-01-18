@@ -1,6 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { authActions } from 'src/app/store/actions/auth-actions';
-import { TAuthState, TProfile } from 'src/app/store/state.model';
+import { storeReset } from 'src/app/store/actions/store-reset';
+import { TAuthState } from 'src/app/store/state.model';
 
 export const initAuthState: TAuthState = {
   error: null,
@@ -22,30 +23,53 @@ export const authReducer = createReducer(
     }),
   ),
 
-  on(authActions.profileSuccess, (state, { data }) => ({
-    ...state,
-    error: null,
-    profile: data,
-  })),
+  on(
+    authActions.profileSuccess,
+    (state, { data }): TAuthState => ({
+      ...state,
+      error: null,
+      profile: data,
+    }),
+  ),
 
-  on(authActions.profileError, (state, { error }) => ({
-    ...state,
-    error,
-  })),
+  on(
+    authActions.profileError,
+    (state, { error }): TAuthState => ({
+      ...state,
+      error,
+    }),
+  ),
 
-  on(authActions.profileUpdateName, (state) => ({
-    ...state,
-    error: null,
-  })),
+  on(
+    authActions.profileUpdateName,
+    (state): TAuthState => ({
+      ...state,
+      error: null,
+    }),
+  ),
 
-  on(authActions.profileUpdateNameSuccess, (state, { name }) => ({
-    ...state,
-    error: null,
-    profile: {
-      ...state.profile,
-      name,
-    },
-  })),
+  on(
+    authActions.profileUpdateNameSuccess,
+    (state, { name }): TAuthState => ({
+      ...state,
+      error: null,
+      profile: {
+        ...state.profile,
+        name,
+      },
+    }),
+  ),
 
-  on(authActions.profileResetProfileState, () => initAuthState),
+  on(
+    storeReset,
+    (): TAuthState => ({
+      error: null,
+      profile: {
+        createdAt: '',
+        email: '',
+        name: '',
+        uid: '',
+      },
+    }),
+  ),
 );

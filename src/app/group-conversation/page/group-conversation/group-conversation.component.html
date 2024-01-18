@@ -1,6 +1,5 @@
 <app-conversation
-  [countdown]="timer.timers[id]"
-  [timer]="timer.timers[id] || 0"
+  [timer]="timer.timers[id + '@group'] || 0"
   [messages]="messagesWithNames"
   [timerMax]="timer.max"
   [owned]="owned"

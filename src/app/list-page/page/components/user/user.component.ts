@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnDestroy } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { TuiAlertService } from '@taiga-ui/core';
 import { TuiSurfaceModule } from '@taiga-ui/experimental';
@@ -10,19 +10,16 @@ import { PersonalConversationService } from 'src/app/personal-conversation/servi
 
 @Component({
   standalone: true,
-  imports: [
-    NgClass,
-    RouterModule,
-
-    TuiSurfaceModule
-  ],
+  imports: [NgClass, RouterModule, TuiSurfaceModule],
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnDestroy {
   @Input() user!: TUserWithConversation;
+
   @Input() conversation?: TConversation;
+
   private destroy = new Subject<void>();
 
   constructor(

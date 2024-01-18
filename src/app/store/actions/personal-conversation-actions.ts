@@ -4,21 +4,21 @@ import { TError, TMessage } from 'src/app/store/state.model';
 const personalConversationsActions = createActionGroup({
   source: 'Personal Conversations',
   events: {
-    'Get Personal Conversations': props<{ id: string; withTimer?: boolean }>(),
+    'Get Personal Conversation': props<{ id: string; withTimer?: boolean }>(),
 
-    'Get Personal Conversations Success': props<{
+    'Get Personal Conversation Success': props<{
       id: string;
       messages: TMessage[];
     }>(),
 
-    'Get Personal Conversations Since': props<{ id: string; since: string }>,
+    'Get Personal Conversation Since': props<{ id: string; since: string }>,
 
-    'Get Personal Conversations Since Success': props<{
+    'Get Personal Conversation Since Success': props<{
       id: string;
       messages: TMessage[];
     }>(),
 
-    'Get Personal Conversations Error': props<{ error: TError }>(),
+    'Get Personal Conversation Error': props<{ error: TError }>(),
 
     'Send Personal Conversation Message': props<{
       conversationId: string;

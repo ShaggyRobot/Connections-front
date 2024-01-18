@@ -4,7 +4,7 @@
       <div class="message-list__messages">
         @for (message of messages; track message) {
           <div class="message">
-            <standalone-message [message]="message" />
+            <app-standalone-message [message]="message" />
           </div>
         }
       </div>
@@ -16,12 +16,12 @@
       class="input-form tui-space_right-1"
       tuiTextfieldSize="m"
       [(ngModel)]="message"
-      >
+    >
       <input
         tuiTextfield
         placeholder="Enter your message.."
         (keydown.enter)="onSend()"
-        />
+      />
     </tui-input>
 
     <button
@@ -71,20 +71,8 @@
           size="xs"
           [max]="timerMax"
           [value]="timer || 0"
-          />
+        />
       </label>
     }
   </div>
-
-  <ng-template #progress>
-    <label class="progress" tuiProgressLabel>
-      <span class="counter-text">{{ timer }}</span>
-      <tui-progress-circle
-        new
-        size="xs"
-        [max]="timerMax"
-        [value]="timer || 0"
-        />
-    </label>
-  </ng-template>
 </div>

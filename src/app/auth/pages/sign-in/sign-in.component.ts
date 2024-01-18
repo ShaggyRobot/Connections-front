@@ -6,7 +6,6 @@ import { Store } from '@ngrx/store';
 import { tuiMarkControlAsTouchedAndValidate } from '@taiga-ui/cdk/utils';
 import {
   TuiAlertService,
-  TuiButtonComponent,
   TuiButtonModule,
   TuiErrorModule,
   TuiTextfieldControllerModule,
@@ -34,7 +33,7 @@ import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector'
     TuiFieldErrorPipeModule,
     TuiTextfieldControllerModule,
     TuiButtonModule,
-    TuiSurfaceModule
+    TuiSurfaceModule,
   ],
 
   providers: [
@@ -49,7 +48,9 @@ import { selectHttpLoading } from 'src/app/store/selectors/httpLoading-selector'
 })
 export class SignInComponent implements OnInit {
   public submitAttempted = false;
+
   public loading$ = this.store.select(selectHttpLoading);
+
   public attemptFailed = false;
 
   public signInForm = this.fb.group({
@@ -66,7 +67,9 @@ export class SignInComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.signInForm.valueChanges.subscribe(() => (this.attemptFailed = false));
+    this.signInForm.valueChanges.subscribe(() => {
+      this.attemptFailed = false;
+    });
   }
 
   onSubmit() {
